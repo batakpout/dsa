@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mergeSortedArrays — step by step</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f5f4f0;
+    color: #1a1a18;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e0dfd8;
+    padding: 36px 40px;
+    max-width: 680px;
+    width: 100%;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+
+  h1 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a18;
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: #888780;
+    margin-bottom: 28px;
+    font-family: "SF Mono", "Fira Mono", monospace;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .leg { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #73726c; }
+  .leg-dot { width: 14px; height: 14px; border-radius: 3px; border: 1px solid; flex-shrink: 0; }
+  .leg-cmp  { background: #dbeafe; border-color: #93c5fd; }
+  .leg-win  { background: #fef3c7; border-color: #f59e0b; }
+  .leg-done { background: #dcfce7; border-color: #4ade80; }
+  .leg-emp  { background: #f1efe8; border-color: #d3d1c7; }
+
+  /* Step info */
+  .step-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: #3d3d3a;
+    line-height: 1.7;
+    padding: 12px 16px;
+    background: #f8f7f3;
+    border-radius: 8px;
+    border-left: 3px solid #93c5fd;
+    min-height: 62px;
+    margin-bottom: 32px;
+    transition: border-color 0.3s;
+  }
+  .step-desc b { color: #1a1a18; }
+  code {
+    font-family: "SF Mono", "Fira Mono", monospace;
+    font-size: 11px;
+    background: #eeedfe;
+    color: #3c3489;
+    border-radius: 3px;
+    padding: 1px 5px;
+  }
+
+  /* Arrays */
+  .arr-section { margin-bottom: 20px; }
+  .arr-label-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 4px;
+  }
+  .arr-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5f5e5a;
+    width: 72px;
+    flex-shrink: 0;
+    font-family: "SF Mono", "Fira Mono", monospace;
+  }
+  .cells {
+    display: flex;
+    gap: 6px;
+  }
+
+  .cell-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px;
+    flex-shrink: 0;
+  }
+
+  .cell {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1px solid #d3d1c7;
+    background: #f9f8f5;
+    font-size: 17px;
+    font-weight: 600;
+    color: #1a1a18;
+    transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.2s;
+    position: relative;
+  }
+  .cell.empty {
+    color: #b4b2a9;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .cell.comparing {
+    background: #dbeafe;
+    border-color: #60a5fa;
+    color: #1e40af;
+    transform: scale(1.08);
+  }
+  .cell.winner {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #78350f;
+    transform: scale(1.12);
+  }
+  .cell.done {
+    background: #dcfce7;
+    border-color: #4ade80;
+    color: #14532d;
+  }
+  .cell.faded {
+    opacity: 0.35;
+  }
+
+  .idx {
+    font-size: 10px;
+    color: #b4b2a9;
+    margin-top: 4px;
+    font-family: "SF Mono", "Fira Mono", monospace;
+  }
+
+  /* Pointer row */
+  .ptr-row {
+    display: flex;
+    gap: 6px;
+    margin-left: 72px;
+    margin-top: 5px;
+    margin-bottom: 2px;
+  }
+  .ptr-cell {
+    width: 48px;
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: #f59e0b;
+    font-family: "SF Mono", "Fira Mono", monospace;
+    min-height: 16px;
+  }
+
+  /* Buttons */
+  .nav {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  button {
+    padding: 8px 20px;
+    font-size: 13px;
+    border: 1px solid #d3d1c7;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1a1a18;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  button:hover:not(:disabled) { background: #f1efe8; border-color: #b4b2a9; }
+  button:disabled { opacity: 0.35; cursor: default; }
+  button.reset { color: #888780; }
+  .prog {
+    margin-left: auto;
+    font-size: 12px;
+    color: #b4b2a9;
+    font-family: "SF Mono", "Fira Mono", monospace;
+  }
+
+  .phase-done .step-desc { border-left-color: #4ade80; }
+</style>
+</head>
+<body>
+<div class="card" id="root">
+  <h1>mergeSortedArrays</h1>
+  <p class="subtitle">v1 = [1, 2, 3, _, _, _, _, _] &nbsp;|&nbsp; v2 = [2, 3, 4, 5] &nbsp;|&nbsp; m=3, n=5</p>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot leg-cmp"></div>being compared</div>
+    <div class="leg"><div class="leg-dot leg-win"></div>winner (written)</div>
+    <div class="leg"><div class="leg-dot leg-done"></div>final / settled</div>
+    <div class="leg"><div class="leg-dot leg-emp"></div>empty slot</div>
+  </div>
+
+  <div class="step-badge" id="badge">Step 1 of N</div>
+  <div class="step-desc" id="desc"></div>
+
+  <!-- v1 -->
+  <div class="arr-section">
+    <div class="arr-label-row">
+      <div class="arr-name">v1</div>
+      <div class="cells" id="v1-cells"></div>
+    </div>
+    <div class="ptr-row" id="v1-ptrs"></div>
+  </div>
+
+  <!-- v2 -->
+  <div class="arr-section">
+    <div class="arr-label-row">
+      <div class="arr-name">v2</div>
+      <div class="cells" id="v2-cells"></div>
+    </div>
+    <div class="ptr-row" id="v2-ptrs"></div>
+  </div>
+
+  <div class="nav">
+    <button id="btn-prev" onclick="go(-1)">← Prev</button>
+    <button id="btn-next" onclick="go(1)">Next →</button>
+    <button class="reset" onclick="cur=0;render()">↺ Reset</button>
+    <span class="prog" id="prog"></span>
+  </div>
+</div>
+
+<script>
+const V1_ORIG = [1, 2, 3];
+const V2      = [2, 3, 4, 5];
+const M = 3, N = 5;
+// v1 has M+N slots total
+// Wait — user said v1=[1,2,3,4,5,6] and v2=[2,3,4,5]
+// Re-reading: "use 1 2 3 4 5 6" = v1 initial valid part, and list 2 "2 3 4 5" = v2
+// So m=6 valid elements in v1, n=4 in v2 → v1 size = 10
+</script>
+<script>
+// Corrected:
+// v1 valid part: [1,2,3,4,5,6], m=6
+// v2: [2,3,4,5], n=4
+// v1 total size: m+n = 10
+
+const _V1_VALID = [1,2,3,4,5,6];
+const _V2 = [2,3,4,5];
+const _M = 6, _N = 4;
+
+const steps = [];
+
+function buildSteps() {
+  const v1 = [..._V1_VALID, 0, 0, 0, 0]; // 10 slots
+  let p1 = _M - 1;  // 5
+  let p2 = _N - 1;  // 3
+  let p  = _M + _N - 1; // 9
+
+  const finalSet = new Set();
+
+  steps.push({
+    v1: [...v1],
+    p1, p2, p,
+    cmp1: -1, cmp2: -1,
+    winner1: -1, winner2: -1,
+    finalSet: new Set(finalSet),
+    used2: new Set(),
+    desc: `<b>Initialise pointers.</b> <code>p1 = m−1 = ${p1}</code> → last valid element of v1 (<b>${_V1_VALID[p1]}</b>). <code>p2 = n−1 = ${p2}</code> → last element of v2 (<b>${_V2[p2]}</b>). <code>p = m+n−1 = ${p}</code> → write cursor, starts at the far right. We fill from the back.`,
+    phase: 'init'
+  });
+
+  const used2 = new Set();
+
+  while (p1 >= 0 && p2 >= 0) {
+    const bP1 = p1, bP2 = p2, bP = p;
+    const a = v1[p1], b = _V2[p2];
+
+    let desc, winnerIs;
+    if (a > b) {
+      winnerIs = 'v1';
+      desc = `<b>Compare</b> v1[${bP1}]&nbsp;=&nbsp;<b>${a}</b> vs v2[${bP2}]&nbsp;=&nbsp;<b>${b}</b>. v1 wins (${a} > ${b}). Write <code>${a}</code> → v1[${bP}]. Decrement p1 and p.`;
+      v1[bP] = a;
+      finalSet.add(bP);
+      p1--; p--;
+    } else {
+      winnerIs = 'v2';
+      desc = `<b>Compare</b> v1[${bP1}]&nbsp;=&nbsp;<b>${a}</b> vs v2[${bP2}]&nbsp;=&nbsp;<b>${b}</b>. v2 wins (${b} ≥ ${a}). Write <code>${b}</code> → v1[${bP}]. Decrement p2 and p.`;
+      v1[bP] = b;
+      finalSet.add(bP);
+      used2.add(bP2);
+      p2--; p--;
+    }
+
+    steps.push({
+      v1: [...v1],
+      p1, p2, p,
+      cmp1: bP1, cmp2: bP2,
+      winner1: winnerIs === 'v1' ? bP1 : -1,
+      winner2: winnerIs === 'v2' ? bP2 : -1,
+      writtenAt: bP,
+      finalSet: new Set(finalSet),
+      used2: new Set(used2),
+      desc, phase: 'merge'
+    });
+  }
+
+  while (p2 >= 0) {
+    const bP2 = p2, bP = p;
+    const b = _V2[p2];
+    const desc = `<b>Remainder.</b> p1 is exhausted. Copy v2[${bP2}]&nbsp;=&nbsp;<b>${b}</b> → v1[${bP}]. Decrement p2 and p.`;
+    v1[bP] = b;
+    finalSet.add(bP);
+    used2.add(bP2);
+    p2--; p--;
+    steps.push({
+      v1: [...v1],
+      p1, p2, p,
+      cmp1: -1, cmp2: bP2,
+      winner1: -1, winner2: bP2,
+      writtenAt: bP,
+      finalSet: new Set(finalSet),
+      used2: new Set(used2),
+      desc, phase: 'remainder'
+    });
+  }
+
+  steps.push({
+    v1: [...v1],
+    p1, p2, p,
+    cmp1: -1, cmp2: -1,
+    winner1: -1, winner2: -1,
+    finalSet: new Set(finalSet),
+    used2: new Set(used2),
+    desc: `<b>Done!</b> v1 = [${v1.join(', ')}]. All ${_M + _N} slots are filled with the merged sorted result.`,
+    phase: 'done'
+  });
+}
+
+buildSteps();
+let cur = 0;
+
+function renderV1(s) {
+  const cont = document.getElementById('v1-cells');
+  const ptrC = document.getElementById('v1-ptrs');
+  cont.innerHTML = '';
+  ptrC.innerHTML = '';
+
+  for (let i = 0; i < _M + _N; i++) {
+    const wrap = document.createElement('div');
+    wrap.className = 'cell-wrap';
+
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+
+    const isOriginalSlot = i < _M;
+    const isFinal = s.finalSet.has(i);
+
+    if (isFinal) {
+      cell.classList.add('done');
+      cell.textContent = s.v1[i];
+    } else if (!isOriginalSlot) {
+      cell.classList.add('empty');
+      cell.textContent = '_';
+    } else {
+      cell.textContent = s.v1[i];
+      // dim if p1 has passed this
+      if (i > s.p1 && s.phase !== 'init') cell.classList.add('faded');
+    }
+
+    if (i === s.cmp1 && !isFinal) cell.classList.add('comparing');
+    if (i === s.winner1 && !isFinal) cell.classList.add('winner');
+    if (i === s.writtenAt && isFinal && steps[cur - 1] && !steps[cur-1].finalSet.has(i)) {
+      cell.classList.add('winner');
+    }
+
+    const idx = document.createElement('div');
+    idx.className = 'idx';
+    idx.textContent = i;
+
+    wrap.appendChild(cell);
+    wrap.appendChild(idx);
+    cont.appendChild(wrap);
+
+    // ptr
+    const pc = document.createElement('div');
+    pc.className = 'ptr-cell';
+    const labels = [];
+    if (i === s.p1 && s.p1 >= 0) labels.push('p1');
+    if (i === s.p && s.p >= 0 && s.p < _M + _N) labels.push('p');
+    if (labels.length) pc.textContent = labels.join('/');
+    ptrC.appendChild(pc);
+  }
+}
+
+function renderV2(s) {
+  const cont = document.getElementById('v2-cells');
+  const ptrC = document.getElementById('v2-ptrs');
+  cont.innerHTML = '';
+  ptrC.innerHTML = '';
+
+  for (let i = 0; i < _N; i++) {
+    const wrap = document.createElement('div');
+    wrap.className = 'cell-wrap';
+
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.textContent = _V2[i];
+
+    if (s.used2.has(i)) {
+      cell.classList.add('done');
+    } else if (i === s.cmp2) {
+      cell.classList.add('comparing');
+    }
+    if (i === s.winner2 && !s.used2.has(i)) cell.classList.add('winner');
+    if (i > s.p2 && s.p2 >= 0 && !s.used2.has(i)) cell.classList.add('faded');
+
+    const idx = document.createElement('div');
+    idx.className = 'idx';
+    idx.textContent = i;
+
+    wrap.appendChild(cell);
+    wrap.appendChild(idx);
+    cont.appendChild(wrap);
+
+    const pc = document.createElement('div');
+    pc.className = 'ptr-cell';
+    if (i === s.p2 && s.p2 >= 0) pc.textContent = 'p2';
+    ptrC.appendChild(pc);
+  }
+}
+
+function render() {
+  const s = steps[cur];
+  document.getElementById('badge').textContent = `Step ${cur + 1} of ${steps.length}`;
+  document.getElementById('desc').innerHTML = s.desc;
+  document.getElementById('prog').textContent = `${cur + 1} / ${steps.length}`;
+
+  const root = document.getElementById('root');
+  root.classList.toggle('phase-done', s.phase === 'done');
+
+  renderV1(s);
+  renderV2(s);
+
+  document.getElementById('btn-prev').disabled = cur === 0;
+  document.getElementById('btn-next').disabled = cur === steps.length - 1;
+}
+
+function go(d) {
+  cur = Math.max(0, Math.min(steps.length - 1, cur + d));
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
