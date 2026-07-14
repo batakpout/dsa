@@ -53,6 +53,35 @@ def bubble_sort(arr: list[int]) -> list[int]:
     return arr
 
 
+"""
+Recursive Bubble Sort
+Idea:
+- One pass bubbles the largest element to the end.
+- Recursively sort the remaining first n-1 elements.
+Time Complexity:
+Best:    O(n)   (with early exit optimization)
+Average: O(n²)
+Worst:   O(n²)
+Space Complexity:O(n) due to recursive call stack.
+"""
+
+
+def recursive_bubble_sort(arr: list[int], n=None) -> list[int]:
+    if n is None:
+        n = len(arr)
+    if n <= 1:
+        return arr
+
+    swapped = False
+    for j in range(n - 1):
+        if arr[j] > arr[j + 1]:
+            swapped = True
+            arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    if not swapped:
+        return arr
+    return recursive_bubble_sort(arr, n - 1)
+
+
 if __name__ == "__main__":
     test_cases = [
         [5, 3, 8, 4, 2],  # Random order
@@ -65,5 +94,6 @@ if __name__ == "__main__":
 
     for arr in test_cases:
         print(f"Original: {arr}")
-        print(f"Sorted:   {bubble_sort(arr.copy())}")  # copy creates another list
+        # print(f"Sorted:   {bubble_sort(arr.copy())}")  # copy creates another list
+        print(f"Sorted:   {recursive_bubble_sort(arr.copy())}")  # copy creates another list
         print("-" * 30)
