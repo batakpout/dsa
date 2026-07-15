@@ -1,4 +1,4 @@
-#LC 1332 Remove Palindromic Subsequences
+# LC 1332 Remove Palindromic Subsequences
 
 
 """
@@ -10,6 +10,41 @@ the following are all subsequences
 "aaaa"
 "babab"
 "baaab"
+"""
+
+"""
+Problem Intuition
+
+The important word in this problem is "subsequence", not "substring".
+
+A subsequence does not have to be contiguous. We can choose any characters as long as their relative order remains the same.
+
+The string contains only two possible characters: 'a' and 'b'.
+
+Observation 1:
+If the entire string is already a palindrome, then we can remove the whole string in a single operation because the
+ entire string itself is a palindromic subsequence.
+
+Answer = 1
+
+Observation 2:
+If the string is not a palindrome, we can always remove all 'a' characters in one operation because a string like 
+"aaaa..." is always a palindrome. Then remove all 'b' characters in another operation because "bbbb..." is also a palindrome.
+
+Therefore, every non-palindromic string can always be removed in exactly 2 operations.
+
+Algorithm
+
+1. If the string is empty, return 0.
+2. Check whether the entire string is a palindrome using two pointers.
+3. If it is a palindrome, return 1.
+4. Otherwise, return 2.
+
+Time Complexity:
+O(n), where n is the length of the string, since we scan the string once to check whether it is a palindrome.
+
+Space Complexity:
+O(1), because only two pointers are used.
 """
 
 """
@@ -41,6 +76,7 @@ Output: 2
 Explanation: "baabb" -> "b" -> "". 
 Remove palindromic subsequence "baab" then "b".
 """
+
 
 def remove_palindromic_sub(s: str) -> int:
     if not s:
