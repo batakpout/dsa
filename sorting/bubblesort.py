@@ -66,17 +66,31 @@ Space Complexity:O(n) due to recursive call stack.
 """
 
 
+def one_pass(arr: list[int], j, n) -> bool:
+    if j >= n - 1:
+        return False
+    swapped_here = False
+    if arr[j] > arr[j + 1]:
+        arr[j], arr[j + 1] = arr[j + 1], arr[j]
+        swapped_here = True
+    swapped_rest = one_pass(arr, j + 1, n)
+    """
+    why we need swapper_here in return
+    swapped_rest only knows about pairs after the current one (j+1 onward). It has zero information about what happened
+    at index j itself. If you return just swapped_rest, you silently throw away that information.
+    e.g input is 2,1,4,5,6 for current stack frame it is True, for all other it is False, so we should return True
+    so yes we returned as we had this statement in here
+    """
+    return swapped_here or swapped_rest
+
+
 def recursive_bubble_sort(arr: list[int], n=None) -> list[int]:
     if n is None:
         n = len(arr)
     if n <= 1:
         return arr
 
-    swapped = False
-    for j in range(n - 1):
-        if arr[j] > arr[j + 1]:
-            swapped = True
-            arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    swapped = one_pass(arr, 0, n)
     if not swapped:
         return arr
     return recursive_bubble_sort(arr, n - 1)
