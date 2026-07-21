@@ -13,6 +13,10 @@ So
 T(n)=2T(n-1)+1
 T(0)=1 equals,
 2^(n+1) - 1
+
+SC: O(n):
+  due to the sequential nature of depth-first recursion, the right-side recursive calls only begin after the left-side ones finish, 
+  meaning the stack does not simultaneously hold all these calls. This is why the space complexity is O(n)
 """
 def zig_zag(n):
     global count
