@@ -1,5 +1,5 @@
 def print_spell(num):
-    spell = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
+    spell = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
     def loop(n):
         if n <= 0:

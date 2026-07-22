@@ -1,7 +1,3 @@
-"""
-reverse a stack
-"""
-
 def insert_at_bottom(stack: list[int], data_to_insert: int):
     if not stack:
         stack.append(data_to_insert)
@@ -15,31 +11,33 @@ def insert_at_bottom(stack: list[int], data_to_insert: int):
 
 def reverse(stack: list[int]):
     if not stack:
-        return
-    top = stack[-1]
-    stack.pop()
+        return stack
+    top = stack.pop()
     reverse(stack)
-    insert_at_bottom(stack, top)
+    return insert_at_bottom(stack, top)
 
 def display_stack(stack: list[int]):
 
     print("Top")
-    print("  ---")
+    print("  ---  ")
     for item in reversed(stack):
+
         print(f"| {item} |")
-    print("  ---")
+
+    print("  ---  ")
+
     print("Bottom")
 
 def main():
 
-    stack = [40, 30, 20, 10]  # 10 is the top of the stack
+    stack = [42, 22, 50, 33]    # Last element is the top of the stack 40
+
     print("Original Stack:")
     display_stack(stack)
-    print(f"\nsorted stack\n")
-
     reverse(stack)
-
+    print("\nReversed Stack:")
     display_stack(stack)
 
 if __name__ == "__main__":
+
     main()
