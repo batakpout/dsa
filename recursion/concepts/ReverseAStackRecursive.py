@@ -1,3 +1,10 @@
+"""
+Recursive technique:
+IBH
+1.hypothesis
+2. base condition
+3. induction step
+"""
 def insert_at_bottom(stack: list[int], data_to_insert: int):
     if not stack:
         stack.append(data_to_insert)
