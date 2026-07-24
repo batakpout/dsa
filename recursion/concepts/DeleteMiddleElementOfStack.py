@@ -3,6 +3,15 @@ Complexity
 * Time: O(n)
 * Space: O(n) (recursive call stack)
 """
+
+"""
+Recursive technique:
+IBH
+1.hypothesis
+2. base condition
+3. induction step
+"""
+
 def delete_kth_element(stack: list[int], k: int):
     if k == 1:
         stack.pop()
