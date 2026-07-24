@@ -1,3 +1,10 @@
+"""
+Recursive technique:
+IBH
+1.hypothesis
+2. base condition
+3. induction step
+"""
 def insert(stack: list[int], temp: int) -> None:
     if not stack or stack[-1] <= temp:
         stack.append(temp)
