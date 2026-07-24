@@ -38,6 +38,16 @@ i.e
 101
 """
 
+"""
+Time: T(n) = 2T(n-1) + 1 = 2^n
+space: O(N) recursive call stack
+"""
+
+
+"""
+Recursive technique:
+choice + decision
+"""
 
 def valid_binary_string_count(n) -> int:
     if n == 0:
