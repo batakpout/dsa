@@ -25,6 +25,10 @@ Space Complexity: O(h) where h = height of tree (worst-case O(n))
     - Skewed tree:   height: O(n) space complexity: O(n)
 
 """
+
+"""
+recursive method: IBH
+"""
 from binarytree.tree import TreeNode
 
 
