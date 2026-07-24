@@ -30,6 +30,8 @@ space: O(N) recursive call stack
 """
 Recursive technique:
 choice + decision
+
+make input smaller each step, input-output method
 """
 
 def all_subsets(output, input):
