@@ -28,7 +28,23 @@ s consists of lowercase English letters, uppercase English letters, and digits.
 """
 
 
-def letterCasePermutation2(s: str) -> list[str]:
+"""
+Time Complexity:
+(n) = length of the string.
+(k) = number of alphabetic characters (letters).
+Only the letters branch into two recursive calls. Digits have only one choice.
+
+There are (2^k) leaf nodes (valid permutations).
+Each output string has length (n), and building it using "output + input_str[0]" creates a new string, which costs
+ (O(n)) over the full path.
+So, O(n.2^k)
+
+Space Complexity: 
+auxillary: The maximum recursion depth is O(n)
+total with result = O(n * 2^k), there are 2^k strings and building each string is of length n.
+"""
+
+def letter_case_permutation2(s: str) -> list[str]:
     result = []
 
     def helper(output, input_str):
@@ -48,4 +64,4 @@ if __name__ == "__main__":
     s = input("enter a string: ")
     # permutation_with_spaces(s[0], s[1:])
     #permutation_with_case_change("", s)
-    print(letterCasePermutation2(s))
+    print(letter_case_permutation2(s))
