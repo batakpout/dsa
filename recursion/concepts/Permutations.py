@@ -30,6 +30,12 @@ choice + decision
 make input smaller each step, input-output method
 
 """
+
+"""
+ensure input is partitioned here before calling i.e output = s[0], input = s[1:]
+"""
+
+
 def permutation_with_spaces(output, input_str):
     if len(input_str) == 0:
         print(output)
@@ -58,6 +64,8 @@ r"""
         |          |          |          |          |          |          |          |
        abc        abC        aBc        aBC        Abc        AbC        ABc        ABC
 """
+
+
 def permutation_with_case_change(output, input_str):
     if len(input_str) == 0:
         print(output)
@@ -82,7 +90,8 @@ r"""
                    a1b2           a1B2           A1b2           A1B2
 """
 
-#if all digits then time is O(N)
+
+# if all digits then time is O(N)
 def letter_case_permutation(output, input_str):
     if len(input_str) == 0:
         print(output)
@@ -93,13 +102,12 @@ def letter_case_permutation(output, input_str):
     else:
         letter_case_permutation(output + input_str[0], input_str[1:])
         letter_case_permutation(output + input_str[0].upper(), input_str[1:])
-        #if input is mix of small and upper alphabets then use .swapcase() instead of upper()
+        # if input is mix of small and upper alphabets then use .swapcase() instead of upper()
     return
-
 
 
 if __name__ == "__main__":
     s = input("enter a string: ")
     # permutation_with_spaces(s[0], s[1:])
-    #permutation_with_case_change("", s)
+    # permutation_with_case_change("", s)
     print(letter_case_permutation("", s))
