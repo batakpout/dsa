@@ -20,7 +20,7 @@ r"""
 General rule: abc
 subsets : '', a, b, c, ab, ac, bc, abc. Here ac can be written as ca but this is not allowed in subsequence
 substring: contagious i.e a, b, c, ab, bc, abc , but not ac
-subsequence: a, b, c, ab, bc, abc, ac  but not ca
+subsequence: '', a, b, c, ab, bc, abc, ac  but not ca
 
 So if we asked to print subsequences in question, subset only we can print, the way we did below
 but, printing sub-strings could be a different question, how to do it?
